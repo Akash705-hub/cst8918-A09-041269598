@@ -1,0 +1,25 @@
+{
+  "name": "cst8918-a09-041269598",
+  "version": "1.0.0",
+  "description": "Husky and GitHub Actions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akash705-hub/cst8918-A09-041269598.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Akash705-hub/cst8918-A09-041269598/issues"
+  },
+  "homepage": "https://github.com/Akash705-hub/cst8918-A09-041269598#readme",
+  "devDependencies": {
+    "husky": "^8.0.0"
+  }
+}
