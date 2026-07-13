@@ -1,7 +1,7 @@
 variable "label_prefix" {
   type        = string
   description = "Prefix used for naming resources"
-  default     = "pate041"    
+  default     = "pate041"
 }
 
 variable "region" {
