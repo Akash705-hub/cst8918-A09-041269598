@@ -28,7 +28,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.4
-      - name: Validate terraform fmt (added_modified)
+      - name: Validate terraform fmt & terraform validate
         run: |
           set +e
 
@@ -43,6 +43,13 @@ jobs:
 
               if [[ $FMT_STATUS -ne 0 ]]; then
                 echo "❌ terraform fmt failed - ${changed_file}" >> $GITHUB_STEP_SUMMARY
+                echo "CHECK_STATUS=1" >> $GITHUB_ENV
+              fi
+              terraform validate $changed_file
+              VALIDATE_STATUS=$(echo $?)
+
+              if [[ $VALIDATE_STATUS -ne 0 ]]; then
+                echo "❌ terraform validate failed - ${changed_file}" >> $GITHUB_STEP_SUMMARY
                 echo "CHECK_STATUS=1" >> $GITHUB_ENV
               fi
             fi
