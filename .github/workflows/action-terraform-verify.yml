@@ -34,19 +34,30 @@ jobs:
 
           echo "CHECK_STATUS=0" >> $GITHUB_ENV
 
+          declare -A seen_dirs=()
+
           for changed_file in ${{ steps.pr_files.outputs.added_modified }}; do
             echo "Checking terraform fmt on ${changed_file}..."
 
             if [[ $changed_file == *.tf ]]; then
-              terraform fmt -check $changed_file
-              FMT_STATUS=$(echo $?)
+              terraform fmt -check "$changed_file"
+              FMT_STATUS=$?
 
               if [[ $FMT_STATUS -ne 0 ]]; then
                 echo "❌ terraform fmt failed - ${changed_file}" >> $GITHUB_STEP_SUMMARY
                 echo "CHECK_STATUS=1" >> $GITHUB_ENV
               fi
-              terraform validate $changed_file
-              VALIDATE_STATUS=$(echo $?)
+
+              dir_name=$(dirname "$changed_file")
+
+              if [[ -z "${seen_dirs[$dir_name]+x}" ]]; then
+                echo "Initializing Terraform in ${dir_name}..."
+                terraform -chdir="$dir_name" init -backend=false -input=false > /dev/null
+                seen_dirs["$dir_name"]=1
+              fi
+
+              terraform -chdir="$dir_name" validate
+              VALIDATE_STATUS=$?
 
               if [[ $VALIDATE_STATUS -ne 0 ]]; then
                 echo "❌ terraform validate failed - ${changed_file}" >> $GITHUB_STEP_SUMMARY
